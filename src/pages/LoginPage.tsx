@@ -2,7 +2,6 @@ import React from "react";
 import useLoginForm from "../hooks/useLoginForm";
 
 const KakaoLoginPage = () => {
-  // useLoginForm 훅에서 필요한 값과 함수들을 가져옵니다.
   const {
     email,
     password,
@@ -40,18 +39,17 @@ const KakaoLoginPage = () => {
       <form onSubmit={handleSubmit} className="w-full max-w-sm px-6">
         <div className="mb-8">
           <input
-            type="text" // 이메일 형식을 강제하기 위해 type="email" 대신 "text"를 사용하고, 유효성 검사를 직접 처리하는 것이 좋습니다.
+            type="text"
             id="inputEmail"
             value={email}
             onChange={handleEmailChange}
-            onBlur={handleEmailBlur} // 포커스 아웃 시 유효성 검사
+            onBlur={handleEmailBlur}
             placeholder="이메일"
             className={`w-full py-3 border-b ${
               emailError ? "border-red-500" : "border-gray-300"
             } focus:outline-none focus:border-yellow-400 text-lg placeholder-gray-500 text-gray-800 transition duration-200`}
-            // required 속성은 React의 유효성 검사와 중복될 수 있으므로 제거하거나 조심해서 사용합니다.
           />
-          {/* ID 에러 메시지 표시 */}
+
           {emailError && (
             <p className="text-red-500 text-sm mt-2">{emailError}</p>
           )}
@@ -68,9 +66,7 @@ const KakaoLoginPage = () => {
             className={`w-full py-3 border-b ${
               passwordError ? "border-red-500" : "border-gray-300"
             } focus:outline-none focus:border-yellow-400 text-lg placeholder-gray-500 text-gray-800 transition duration-200`}
-            // required 속성은 React의 유효성 검사와 중복될 수 있으므로 제거하거나 조심해서 사용합니다.
           />
-          {/* PW 에러 메시지 표시 */}
           {passwordError && (
             <p className="text-red-500 text-sm mt-2">{passwordError}</p>
           )}
@@ -83,7 +79,6 @@ const KakaoLoginPage = () => {
               ? "bg-yellow-400 hover:bg-yellow-500"
               : "bg-gray-300 cursor-not-allowed"
           } text-black text-l rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition duration-200`}
-          // 활성화 상태에 따라 focus:ring-yellow-500을 조절할 수 있습니다.
         >
           로그인
         </button>
