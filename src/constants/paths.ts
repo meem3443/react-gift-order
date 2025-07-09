@@ -6,4 +6,5 @@ export const PATHS = {
   MY_GIFTS: "/my-gifts",
   NOT_FOUND: "*",
   LOGIN: "/login",
+  ORDER: "/order/:id",
 };

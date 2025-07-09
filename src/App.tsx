@@ -5,11 +5,12 @@ import RankingPage from "./pages/RankingPage";
 import MyGiftPage from "./pages/MyGiftPage";
 import LoginPage from "./pages/LoginPage";
 import { PATHS } from "./constants/paths";
+import GiftOrderPage from "./pages/GiftOrderPage";
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100 pb-20 font-sans">
+      <div className="min-h-screen bg-gray-100 pb-20 font-sans max-w-screen-md justify-center mx-auto">
         <Header />
         <nav className="bg-white shadow-md py-3 px-4 flex justify-center space-x-6 text-gray-700 border-b border-gray-200">
           <Link
@@ -37,6 +38,7 @@ function App() {
             <Route path={PATHS.RANKING} element={<RankingPage />} />
             <Route path={PATHS.MY_GIFTS} element={<MyGiftPage />} />
             <Route path={PATHS.LOGIN} element={<LoginPage />} />
+            <Route path={PATHS.ORDER} element={<GiftOrderPage />} />
             <Route
               path={PATHS.NOT_FOUND}
               element={

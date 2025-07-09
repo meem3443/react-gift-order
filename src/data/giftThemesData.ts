@@ -1,6 +1,4 @@
-import type { ThemeItem } from "../types/common";
-
-export const giftThemesData: ThemeItem[] = [
+export const giftThemesData = [
   {
     themeId: 3715,
     name: "생일",

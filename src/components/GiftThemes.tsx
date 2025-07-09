@@ -1,12 +1,11 @@
 import { giftThemesData } from "../data/giftThemesData";
-import type { ThemeItem } from "../types/common";
 
 const GiftThemes = () => {
   return (
     <section className="mb-8">
       <h2 className="text-xl font-bold text-gray-800 mb-4">선물 테마</h2>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-y-4 gap-x-2 text-center bg-white p-4 rounded-lg shadow-sm">
-        {giftThemesData.map((theme: ThemeItem) => (
+        {giftThemesData.map((theme) => (
           <div
             key={theme.themeId}
             className="flex flex-col items-center p-2 cursor-pointer hover:bg-gray-50 rounded-lg transition-colors"

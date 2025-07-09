@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
-import { sortOptions, type SortOptionType } from "../constants/sortoptions";
+import { SORTOPTIONS, type SortOptionType } from "../constants/sortoptions";
 import { tabs, type TabType } from "../constants/tabs";
-import ProductCard from "../components/ProductCard";
-
+import ProductCard from "../components/cards/ProductCard";
+import { useNavigate } from "react-router-dom";
 import { productListData } from "../data/productListData";
 import type { Product } from "../types/product";
 
 const RealtimeRanking = () => {
+  const navigate = useNavigate();
+
+  const handleOrderClick = (productId: number) => {
+    navigate(`/order/${productId}`);
+  };
+
   const [activeTab, setActiveTab] = useState<TabType>(() => {
     const savedTab = localStorage.getItem("activeTab");
     // savedTab이 TabType에 포함되지 않는 값일 수 있으므로 유효성 검사 추가 고려
@@ -18,7 +24,7 @@ const RealtimeRanking = () => {
   const [activeSort, setActiveSort] = useState<SortOptionType>(() => {
     const savedSort = localStorage.getItem("activeSort");
     // savedSort가 SortOptionType에 포함되지 않는 값일 수 있으므로 유효성 검사 추가 고려
-    return savedSort && sortOptions.includes(savedSort as SortOptionType)
+    return savedSort && SORTOPTIONS.includes(savedSort as SortOptionType)
       ? (savedSort as SortOptionType)
       : "받고 싶어한";
   });
@@ -55,7 +61,7 @@ const RealtimeRanking = () => {
         </div>
 
         <div className="flex justify-end items-center space-x-2 text-sm text-gray-600 mb-4">
-          {sortOptions.map((option, index) => (
+          {SORTOPTIONS.map((option, index) => (
             <span
               key={option}
               className={`cursor-pointer ${
@@ -66,7 +72,7 @@ const RealtimeRanking = () => {
               onClick={() => setActiveSort(option)}
             >
               {option}
-              {index < sortOptions.length - 1 && (
+              {index < SORTOPTIONS.length - 1 && (
                 <span className="ml-2 text-gray-400">|</span>
               )}
             </span>
@@ -80,6 +86,7 @@ const RealtimeRanking = () => {
                 key={product.id}
                 product={product}
                 rank={index + 1}
+                onClick={() => handleOrderClick(product.id)}
               />
             ))}
           </div>
