@@ -1,35 +1,65 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useLoginForm from "../hooks/useLoginForm";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import { PATHS } from "../constants/paths";
 
-const KakaoLoginPage = () => {
+const LoginPage = () => {
+  const { login, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const {
     email,
     password,
-    emailError, // 이제 파생값으로 받음
-    passwordError, // 이제 파생값으로 받음
+    emailError,
+    passwordError,
     handleEmailChange,
     handleEmailBlur,
     handlePasswordChange,
     handlePasswordBlur,
-    isFormValid, // 폼 유효성 상태
+    isFormValid,
   } = useLoginForm();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (isLoggedIn) {
+      const from = location.state?.from?.pathname || PATHS.MY_GIFTS;
+      navigate(from, { replace: true });
+    }
+  }, [isLoggedIn, navigate, location.state]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 제출 버튼 클릭 시, 아직 blur 되지 않은 필드들도 모두 touched 처리하여 에러 메시지 표시
-    // (선택 사항: 사용자 경험에 따라 제출 시점에 모든 에러를 보여줄지 결정)
     handleEmailBlur();
     handlePasswordBlur();
 
     if (isFormValid) {
-      alert(`로그인 시도\n이메일: ${email}\n비밀번호: ${password}`);
-      console.log("로그인 성공!");
-      // 실제 로그인 API 호출 등
+      const isEmailFormatValid = !emailError;
+      const isPasswordLengthValid = password.length >= 8;
+
+      const simulateLoginSuccess = isEmailFormatValid && isPasswordLengthValid;
+
+      if (simulateLoginSuccess) {
+        alert(`로그인 성공! 이메일: ${email}`);
+        console.log("로그인 성공!");
+        login(email ?? "");
+      } else {
+        alert(
+          "로그인 실패: 이메일 형식을 확인하거나 비밀번호를 8자리 이상 입력해주세요."
+        );
+        console.log("로그인 실패: 테스트 조건 불충족.");
+      }
     } else {
       console.log("유효성 검사 실패. 모든 필드를 올바르게 입력해주세요.");
+
+      alert("입력 양식을 올바르게 작성해주세요.");
     }
   };
+
+  if (isLoggedIn) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
@@ -50,8 +80,6 @@ const KakaoLoginPage = () => {
               emailError ? "border-red-500" : "border-gray-300"
             } focus:outline-none focus:border-yellow-400 text-lg placeholder-gray-500 text-gray-800 transition duration-200`}
           />
-
-          {/* emailError는 이미 isEmailTouched를 고려하여 계산되므로 별도 조건 추가 불필요 */}
           {emailError && (
             <p className="text-red-500 text-sm mt-2">{emailError}</p>
           )}
@@ -69,7 +97,6 @@ const KakaoLoginPage = () => {
               passwordError ? "border-red-500" : "border-gray-300"
             } focus:outline-none focus:border-yellow-400 text-lg placeholder-gray-500 text-gray-800 transition duration-200`}
           />
-          {/* passwordError는 이미 isPasswordTouched를 고려하여 계산되므로 별도 조건 추가 불필요 */}
           {passwordError && (
             <p className="text-red-500 text-sm mt-2">{passwordError}</p>
           )}
@@ -90,4 +117,4 @@ const KakaoLoginPage = () => {
   );
 };
 
-export default KakaoLoginPage;
+export default LoginPage;
