@@ -1,58 +1,48 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useInput } from "../hooks/useInput";
 
 import giftOrderThanksData from "../data/giftOrderThanksData";
 
 import ThanksCard from "./cards/ThanksCard";
-
 import InputCard from "./cards/InputCard";
-
 import { ERROR_MESSAGES } from "../constants/message";
+
+const validateThankMessage = (value: string): string => {
+  if (!value.trim()) {
+    return ERROR_MESSAGES.REQUIRED_MESSAGE;
+  }
+  return "";
+};
 
 const ThanksCardSlide = () => {
   const [selectedId, setSelectedId] = useState<number | null>(
     giftOrderThanksData.length > 0 ? giftOrderThanksData[0].id : null
   );
 
-  const [thankMessage, setThankMessage] = useState<string>("");
-
-  const [thankMessageError, setThankMessageError] = useState<string>("");
-
-  const handleSelect = (id: number) => {
-    setSelectedId(id);
-  };
+  const thankMessageInput = useInput("", validateThankMessage);
+  const { setValue, setTouched } = thankMessageInput;
+  const handleSelect = useCallback(
+    (id: number) => {
+      setSelectedId(id);
+      setTouched(false);
+    },
+    [setTouched]
+  );
 
   useEffect(() => {
     if (selectedId !== null) {
       const selectedCard = giftOrderThanksData.find(
         (card) => card.id === selectedId
       );
-
-      setThankMessage(selectedCard?.defaultTextMessage || ""); // 선택된 카드의 기본 메시지로 초기화
-
-      setThankMessageError("");
+      setValue(selectedCard?.defaultTextMessage || "");
     } else {
-      setThankMessage("");
-
-      setThankMessageError("");
+      setValue("");
+      setTouched(false);
     }
-  }, [selectedId]);
-
-  const handleThankMessageChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    const newMessage = e.target.value;
-
-    setThankMessage(newMessage);
-
-    if (!newMessage.trim()) {
-      setThankMessageError(ERROR_MESSAGES.REQUIRED_MESSAGE);
-    } else {
-      setThankMessageError("");
-    }
-  };
+  }, [selectedId, setValue, setTouched]);
 
   return (
-    <div className="flex flex-col items-center max-w-screen-lg mx-auto h-auto bg-white m-3">
+    <div className="flex flex-col items-center max-w-screen-lg mx-auto h-auto mb-2">
       <div className="flex overflow-x-auto space-x-4 p-4 w-full ">
         {giftOrderThanksData.map(({ id, thumbUrl, defaultTextMessage }) => (
           <ThanksCard
@@ -67,23 +57,29 @@ const ThanksCardSlide = () => {
       </div>
 
       {selectedId && (
-        <div className="flex flex-col items-center justify-center bg-black">
+        <div className="flex flex-col items-center justify-center w-full bg-black">
           <img
+            id="selectedCardImage"
             src={
               giftOrderThanksData.find((card) => card.id === selectedId)
                 ?.imageUrl
             }
             alt="선택된 카드"
-            className="w-1/2 h-1/4 rounded-lg shadow-lg mb-6"
+            className="w-1/2 h-1/4 rounded-lg shadow-lg mb-6 mt-4"
           />
-
-          <InputCard
-            id="thankMessage"
-            label="메시지를 입력해주세요."
-            value={thankMessage}
-            onChange={handleThankMessageChange}
-            errorMessage={thankMessageError}
-          />
+          <div className="w-full mx-auto rounded-lg">
+            <InputCard
+              key={selectedId}
+              id="thankMessage"
+              label="메시지를 입력해주세요."
+              isTextArea={true}
+              value={thankMessageInput.value}
+              onChange={thankMessageInput.onChange}
+              onBlur={thankMessageInput.onBlur}
+              error={thankMessageInput.error}
+              touched={thankMessageInput.touched}
+            />
+          </div>
         </div>
       )}
     </div>

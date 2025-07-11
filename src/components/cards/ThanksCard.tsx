@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ThanksCardProps {
   id: number;
   thumbUrl: string;
@@ -8,13 +6,12 @@ interface ThanksCardProps {
   onSelect: (id: number) => void;
 }
 
-const ThanksCard: React.FC<ThanksCardProps> = ({
+const ThanksCard = ({
   id,
   thumbUrl,
-  // defaultMessage는 여기서는 렌더링에 사용되지 않으므로, 구조 분해 할당에서 제거해도 무방합니다.
   isSelected,
   onSelect,
-}) => {
+}: ThanksCardProps) => {
   return (
     <div
       className={`relative
@@ -26,8 +23,6 @@ const ThanksCard: React.FC<ThanksCardProps> = ({
         }`}
       onClick={() => onSelect(id)}
     >
-      {/* 이미지는 부모 div의 높이를 100% 채우도록 h-full 유지.
-          이렇게 해야 이미지 아래 흰색 여백이 생기지 않습니다. */}
       <img src={thumbUrl} alt="썸네일" className="h-full w-full object-cover" />
     </div>
   );

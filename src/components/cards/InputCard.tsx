@@ -1,25 +1,22 @@
-// src/components/cards/InputCard.tsx
 import React from "react";
 
 interface InputCardProps {
-  title?: string; // 옵셔널
-  label: string; // placeholder 역할
-  category?: string; // id, name 등으로 활용 가능
-  type?: React.HTMLInputTypeAttribute; // "text", "number", "tel" 등
-  isTextArea?: boolean; // textarea로 렌더링할지 여부
-  id?: string; // input의 id 속성
-
-  // useInput 훅에서 전달받을 props를 명시적으로 타입 선언
+  title?: string;
+  label: string;
+  category?: string;
+  type?: React.HTMLInputTypeAttribute;
+  isTextArea?: boolean;
+  id?: string;
   value: string;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
-  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void; // FocusEvent 타입 명시
-  error: string; // useInput 훅의 error 값을 직접 받음
-  touched: boolean; // useInput 훅의 touched 값을 직접 받음
+  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  error: string;
+  touched: boolean;
 }
 
-const InputCard: React.FC<InputCardProps> = ({
+const InputCard = ({
   title,
   label,
   category,
@@ -31,46 +28,58 @@ const InputCard: React.FC<InputCardProps> = ({
   onBlur,
   error,
   touched,
-}) => {
-  // touched 상태일 때만 에러 메시지를 표시합니다.
-  const displayError: string = touched ? error : "";
+}: InputCardProps) => {
+  const displayError: string = touched && error ? error : "";
+
+  const uniqueInputId =
+    id || (category ? `input-${category.replace(/\s+/g, "-")}` : undefined);
+
+  const showCategoryText = category && !isTextArea;
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 bg-white w-full px-5 py-5">
       {title && (
-        <h3 className="mb-2 text-lg font-semibold text-gray-800">{title}</h3>
+        <h3 className="mb-2 text-base font-semibold text-gray-800">{title}</h3>
       )}
-      <label htmlFor={id || category} className="sr-only">
-        {label}
-      </label>
-      {isTextArea ? (
-        <textarea
-          id={id || category}
-          className={`w-full rounded-md border p-3 text-gray-800 placeholder-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            displayError ? "border-red-500" : "border-gray-300"
-          }`}
-          placeholder={label}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          rows={3}
-        ></textarea>
-      ) : (
-        <input
-          type={type}
-          id={id || category}
-          className={`w-full rounded-md border p-3 text-gray-800 placeholder-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            displayError ? "border-red-500" : "border-gray-300"
-          }`}
-          placeholder={label}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-        />
-      )}
-      {displayError && (
-        <p className="mt-1 text-sm text-red-600">{displayError}</p>
-      )}
+      <div
+        className={`flex items-center ${
+          showCategoryText ? "" : "justify-center"
+        }`}
+      >
+        {showCategoryText && (
+          <p className="w-24 text-gray-700 font-medium mr-4">{category}</p>
+        )}
+        <div className={`flex-grow ${!showCategoryText ? "w-full" : ""}`}>
+          {isTextArea ? (
+            <textarea
+              id={uniqueInputId}
+              className={`w-full h-16 rounded-md border  text-gray-800 placeholder-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                displayError ? "border-red-500" : "border-gray-300 "
+              }`}
+              placeholder={label}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              rows={3}
+            />
+          ) : (
+            <input
+              type={type}
+              id={uniqueInputId}
+              className={`w-full rounded-md border p-3 text-gray-800 placeholder-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                displayError ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder={label}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+            />
+          )}
+          {displayError && (
+            <p className="mt-1 text-sm text-red-600">{displayError}</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

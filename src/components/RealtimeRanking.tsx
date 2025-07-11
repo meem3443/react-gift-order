@@ -5,17 +5,39 @@ import ProductCard from "../components/cards/ProductCard";
 import { useNavigate } from "react-router-dom";
 import { productListData } from "../data/productListData";
 import type { Product } from "../types/product";
+import { PATHS } from "../constants/paths";
+import { useAuth } from "../context/AuthContext";
 
 const RealtimeRanking = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   const handleOrderClick = (productId: number) => {
-    navigate(`/order/${productId}`);
+    if (!isLoggedIn) {
+      navigate(PATHS.LOGIN, {
+        state: { from: PATHS.ORDER, productId: productId },
+      });
+      return;
+    }
+
+    const selectedProduct = productListData.find((p) => p.id === productId);
+
+    if (selectedProduct) {
+      navigate(PATHS.ORDER, {
+        state: {
+          imageUrl: selectedProduct.imageURL,
+          productName: selectedProduct.name,
+          brand: selectedProduct.brandInfo.name,
+          price: selectedProduct.price.sellingPrice,
+        },
+      });
+    } else {
+      console.error(`Product with ID ${productId} not found.`);
+    }
   };
 
   const [activeTab, setActiveTab] = useState<TabType>(() => {
     const savedTab = localStorage.getItem("activeTab");
-    // savedTab이 TabType에 포함되지 않는 값일 수 있으므로 유효성 검사 추가 고려
     return savedTab && tabs.includes(savedTab as TabType)
       ? (savedTab as TabType)
       : "전체";
@@ -23,7 +45,6 @@ const RealtimeRanking = () => {
 
   const [activeSort, setActiveSort] = useState<SortOptionType>(() => {
     const savedSort = localStorage.getItem("activeSort");
-    // savedSort가 SortOptionType에 포함되지 않는 값일 수 있으므로 유효성 검사 추가 고려
     return savedSort && SORTOPTIONS.includes(savedSort as SortOptionType)
       ? (savedSort as SortOptionType)
       : "받고 싶어한";

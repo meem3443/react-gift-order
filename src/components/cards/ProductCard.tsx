@@ -32,7 +32,6 @@ const ProductCard = ({ product, rank, onClick }: ProductCardProps) => {
           {product.brandInfo.imageURL && (
             <img
               src={product.brandInfo.imageURL}
-              alt={product.brandInfo.name + " 로고"}
               className="w-8 h-8 object-contain"
             />
           )}
