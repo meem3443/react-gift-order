@@ -1,5 +1,3 @@
-// src/constants/messages.ts
-
 export const ERROR_MESSAGES = {
   REQUIRED_MESSAGE: "메시지를 입력해주세요.",
   REQUIRED_NAME: "이름을 입력해주세요.",
