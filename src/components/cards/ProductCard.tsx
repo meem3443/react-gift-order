@@ -1,15 +1,19 @@
-import type { Product } from "../types/product.ts";
+import type { Product } from "../../types/product.ts";
 
 interface ProductCardProps {
   product: Product;
   rank: number;
+  onClick?: () => void;
 }
-const ProductCard = ({ product, rank }: ProductCardProps) => {
+const ProductCard = ({ product, rank, onClick }: ProductCardProps) => {
   const formattedPrice =
     product.price.sellingPrice.toLocaleString("ko-KR") + "원";
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden relative transform transition-transform hover:scale-105 duration-300">
+    <div
+      onClick={onClick}
+      className="bg-white rounded-lg shadow-md overflow-hidden relative transform transition-transform hover:scale-105 duration-300"
+    >
       <div className="absolute top-2 left-2 bg-black text-white text-xs font-bold px-2 py-1 rounded-full">
         {rank}
       </div>
@@ -28,7 +32,6 @@ const ProductCard = ({ product, rank }: ProductCardProps) => {
           {product.brandInfo.imageURL && (
             <img
               src={product.brandInfo.imageURL}
-              alt={product.brandInfo.name + " 로고"}
               className="w-8 h-8 object-contain"
             />
           )}

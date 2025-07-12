@@ -1,22 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "../constants/paths";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   const handleProfileClick = () => {
-    navigate(PATHS.LOGIN);
+    if (isLoggedIn) {
+      navigate(PATHS.PROFILE);
+    } else {
+      navigate(PATHS.LOGIN);
+    }
   };
 
   const handleBackClick = () => {
     navigate(-1);
   };
+
   return (
-    <header className="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-20">
+    <header className="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-20 border-b border-gray-200">
       <div className="flex items-center">
         <button
           onClick={handleBackClick}
           className="text-gray-600 mr-4 p-1 rounded-full hover:bg-gray-100 transition-colors"
+          aria-label="뒤로 가기"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,9 +43,11 @@ const Header = () => {
         </button>
         <h1 className="text-xl font-bold text-gray-800">선물하기</h1>
       </div>
+
       <button
         onClick={handleProfileClick}
-        className="text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
+        className="text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
+        aria-label={isLoggedIn ? "내 프로필로 이동" : "로그인 페이지로 이동"}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
