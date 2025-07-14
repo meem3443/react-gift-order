@@ -10,7 +10,7 @@ const ProductCard = ({ product, rank, onClick }: ProductCardProps) => {
     product.price.sellingPrice.toLocaleString("ko-KR") + "원";
 
   return (
-    <div
+    <button
       onClick={onClick}
       className="bg-white rounded-lg shadow-md overflow-hidden relative transform transition-transform hover:scale-105 duration-300"
     >
@@ -41,7 +41,7 @@ const ProductCard = ({ product, rank, onClick }: ProductCardProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 
