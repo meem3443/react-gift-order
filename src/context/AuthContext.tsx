@@ -30,20 +30,17 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<{ email: string } | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedLoggedIn = localStorage.getItem("isLoggedIn");
     const storedUser = localStorage.getItem("user");
 
-    if (storedLoggedIn === "true" && storedUser) {
+    if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setIsLoggedIn(true);
         setUser(parsedUser);
       } catch (error) {
         console.error(
@@ -51,19 +48,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           error
         );
 
-        localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("user");
+        localStorage.removeItem("authToken");
       }
     }
     setIsLoading(false);
   }, []);
 
   const login = (email: string, token?: string) => {
-    setIsLoggedIn(true);
     const userData = { email: email };
     setUser(userData);
-    localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("user", JSON.stringify(userData));
+
     if (token) {
       localStorage.setItem("authToken", token);
     }
@@ -71,16 +67,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = () => {
-    setIsLoggedIn(false);
     setUser(null);
-    localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
+
     localStorage.removeItem("authToken");
     navigate("/login");
   };
 
   const contextValue = {
-    isLoggedIn,
+    isLoggedIn: !!user,
     isLoading,
     user,
     login,

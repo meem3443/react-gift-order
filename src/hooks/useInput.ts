@@ -1,4 +1,3 @@
-// src/hooks/useInput.tsx
 import { useReducer, useCallback } from "react";
 
 // 액션 타입 정의
@@ -116,7 +115,7 @@ export const useInput = (initialValue: string, validator: Validator) => {
     onChange,
     onBlur,
     reset,
-    setValue, // 추가
-    setTouched, // 추가
+    setValue,
+    setTouched,
   };
 };
