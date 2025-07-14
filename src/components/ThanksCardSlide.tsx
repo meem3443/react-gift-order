@@ -58,6 +58,7 @@ const ThanksCardSlide = () => {
 
       {selectedId && (
         <div className="flex flex-col items-center justify-center w-full ">
+
           <img
             id="selectedCardImage"
             src={

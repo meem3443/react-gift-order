@@ -41,7 +41,9 @@ const ProductCard = ({ product, rank, onClick }: ProductCardProps) => {
           </div>
         </div>
       </div>
+
     </button>
+
   );
 };
 

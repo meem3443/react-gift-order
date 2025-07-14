@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm, useFieldArray, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -233,10 +234,8 @@ const Receiver = ({
             ))}
           </div>
 
-          {/* 하단 고정 버튼 (완료) - 편집 모드에서만 보임 */}
           <div className="flex justify-center mt-auto">
             {" "}
-            {/* 버튼을 중앙으로 정렬 */}
             <button
               type="submit"
               className="w-full px-4 py-3 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-500"
