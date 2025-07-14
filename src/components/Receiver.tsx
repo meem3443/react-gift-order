@@ -84,7 +84,6 @@ const Receiver = ({
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md mb-4">
-      {/* 헤더 섹션: '받는 사람' 제목과 '추가'/'수정' 버튼 */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">받는 사람</h2>
         {isEditing ? (
@@ -121,7 +120,6 @@ const Receiver = ({
             </div>
           )}
 
-          {/* 받는 사람이 있을 때 표시되는 UI (주의사항 및 추가하기 버튼) */}
           <div className="mb-4">
             <p className="text-gray-600 mb-2">
               * 최대 10명까지 추가 할 수 있어요.
@@ -138,10 +136,7 @@ const Receiver = ({
             </button>
           </div>
 
-          {/* 동적으로 추가되는 받는 사람 입력 필드 목록 */}
           <div className="space-y-4 mb-6">
-            {" "}
-            {/* mb-6 추가로 버튼과의 간격 확보 */}
             {fields.map((field, index) => (
               <div
                 key={field.id}
