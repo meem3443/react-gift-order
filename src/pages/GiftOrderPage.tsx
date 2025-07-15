@@ -1,5 +1,4 @@
-import { useMemo } from "react";
-import { useInput } from "../hooks/useInput";
+import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import ThanksCardSlide from "../components/ThanksCardSlide";
@@ -7,18 +6,11 @@ import Sender from "../components/Sender";
 import Receiver from "../components/Receiver";
 import Order from "../components/Order";
 import ProductDetail from "../components/ProductDetail";
-import { ERROR_MESSAGES } from "../constants/message";
 
-const validateQuantity = (value: string): string => {
-  const quantity = parseInt(value, 10);
-  if (isNaN(quantity) || quantity < 1) {
-    return ERROR_MESSAGES.MIN_QUANTITY;
-  }
-  return "";
-};
+import type { ReceiverField } from "../schemas/receiverSchema";
 
 const GiftOrderPage = () => {
-  const quantityInput = useInput("1", validateQuantity);
+  const [finalReceivers, setFinalReceivers] = useState<ReceiverField[]>([]);
 
   const location = useLocation();
   const productDetailData = location.state as
@@ -30,12 +22,15 @@ const GiftOrderPage = () => {
       }
     | undefined;
 
+  const totalQuantity = useMemo(() => {
+    return finalReceivers.reduce((sum, receiver) => sum + receiver.quantity, 0);
+  }, [finalReceivers]);
+
   const totalPrice = useMemo(() => {
     if (!productDetailData) return 0;
-    const quantity = parseInt(quantityInput.value, 10);
     const unitPrice = productDetailData.price;
-    return isNaN(quantity) ? 0 : quantity * unitPrice;
-  }, [quantityInput.value, productDetailData]);
+    return totalQuantity * unitPrice;
+  }, [totalQuantity, productDetailData]);
 
   if (!productDetailData) {
     return (
@@ -45,16 +40,23 @@ const GiftOrderPage = () => {
     );
   }
 
+  const handleReceiversUpdate = (receivers: ReceiverField[]) => {
+    setFinalReceivers(receivers);
+
+    console.log("최종 받는 사람 목록 업데이트됨:", receivers);
+  };
+
+  const handleReceiverCancel = () => {
+    console.log("Receiver 컴포넌트에서 취소되었습니다.");
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 px-4 pt-4 pb-[80px]">
       <ThanksCardSlide />
       <Sender />
       <Receiver
-        quantityValue={quantityInput.value}
-        onQuantityChange={quantityInput.onChange}
-        onQuantityBlur={quantityInput.onBlur}
-        quantityError={quantityInput.error}
-        quantityTouched={quantityInput.touched}
+        onReceiversUpdate={handleReceiversUpdate}
+        onCancel={handleReceiverCancel}
       />
       <ProductDetail
         imageUrl={productDetailData.imageUrl}
@@ -62,8 +64,8 @@ const GiftOrderPage = () => {
         brand={productDetailData.brand}
         price={productDetailData.price}
       />
-      {/* Order 컴포넌트에 계산된 totalPrice와 quantityInput.value를 전달 */}
-      <Order totalPrice={totalPrice} quantity={quantityInput.value} />
+      {/* Order 컴포넌트에 계산된 totalPrice와 totalQuantity 전달 */}
+      <Order totalPrice={totalPrice} quantity={totalQuantity.toString()} />
     </div>
   );
 };
